@@ -26,3 +26,23 @@ def test_process_items():
 
 def test_check_number():
     assert check_number(3) == "three"
+
+def test_check_number_digits():
+    expected = {
+        1: "one",
+        2: "two",
+        3: "three",
+        4: "four",
+        5: "five",
+        6: "six",
+        7: "seven",
+        8: "eight",
+        9: "nine",
+    }
+    for n, exp in expected.items():
+        assert check_number(n) == exp
+
+def test_check_number_other():
+    assert check_number(0) == "other"
+    assert check_number(10) == "other"
+    assert check_number(-5) == "other"
