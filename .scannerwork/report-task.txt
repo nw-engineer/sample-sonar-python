@@ -1,0 +1,6 @@
+projectKey=sample-sonar-python-003
+serverUrl=http://sonarqube:9000
+serverVersion=26.3.0.120487
+dashboardUrl=http://sonarqube:9000/dashboard?id=sample-sonar-python-003
+ceTaskId=b11e211d-b608-4101-a024-a2cff83dc564
+ceTaskUrl=http://sonarqube:9000/api/ce/task?id=b11e211d-b608-4101-a024-a2cff83dc564
