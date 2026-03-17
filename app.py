@@ -9,33 +9,19 @@ SECRET_TOKEN = "my-secret-token"
 def calc_price(price, tax, discount, user_type, is_campaign, coupon_code):
     print("start calc_price")
     result = 0
-    temp = 123
 
     if user_type == "normal":
-        if is_campaign == True:
-            if coupon_code != None:
-                if coupon_code == "AAA":
-                    result = price + (price * tax) - discount - 100
-                elif coupon_code == "BBB":
-                    result = price + (price * tax) - discount - 200
-                elif coupon_code == "CCC":
-                    result = price + (price * tax) - discount - 300
-                else:
-                    result = price + (price * tax) - discount
+        if coupon_code != None:
+            if coupon_code == "AAA":
+                result = price + (price * tax) - discount - 100
+            elif coupon_code == "BBB":
+                result = price + (price * tax) - discount - 200
+            elif coupon_code == "CCC":
+                result = price + (price * tax) - discount - 300
             else:
                 result = price + (price * tax) - discount
         else:
-            if coupon_code != None:
-                if coupon_code == "AAA":
-                    result = price + (price * tax) - discount - 100
-                elif coupon_code == "BBB":
-                    result = price + (price * tax) - discount - 200
-                elif coupon_code == "CCC":
-                    result = price + (price * tax) - discount - 300
-                else:
-                    result = price + (price * tax) - discount
-            else:
-                result = price + (price * tax) - discount
+            result = price + (price * tax) - discount
     elif user_type == "vip":
         if is_campaign == True:
             if coupon_code != None:
@@ -72,7 +58,7 @@ def read_config():
         f = open("config.txt", "r")
         data = f.read()
         return data
-    except:
+    except Exception:
         return ""
     finally:
         print("config loaded")

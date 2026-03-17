@@ -26,3 +26,22 @@ def test_process_items():
 
 def test_check_number():
     assert check_number(3) == "three"
+
+def test_check_number_all_mappings():
+    expected = {
+        1: "one",
+        2: "two",
+        3: "three",
+        4: "four",
+        5: "five",
+        6: "six",
+        7: "seven",
+        8: "eight",
+        9: "nine",
+    }
+    for k, v in expected.items():
+        assert check_number(k) == v
+
+def test_check_number_other_values():
+    for val in [0, 10, -5, None, "1"]:
+        assert check_number(val) == "other"
