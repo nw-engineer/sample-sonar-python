@@ -26,3 +26,31 @@ def test_process_items():
 
 def test_check_number():
     assert check_number(3) == "three"
+
+def test_check_number_one():
+    assert check_number(1) == "one"
+
+def test_check_number_two():
+    assert check_number(2) == "two"
+
+def test_check_number_four():
+    assert check_number(4) == "four"
+
+def test_check_number_five():
+    assert check_number(5) == "five"
+
+def test_check_number_six():
+    assert check_number(6) == "six"
+
+def test_check_number_seven():
+    assert check_number(7) == "seven"
+
+def test_check_number_eight():
+    assert check_number(8) == "eight"
+
+def test_check_number_nine():
+    assert check_number(9) == "nine"
+
+def test_check_number_other():
+    assert check_number(0) == "other"
+    assert check_number(10) == "other"
