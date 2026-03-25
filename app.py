@@ -2,55 +2,40 @@ import os
 import hashlib
 
 
-PASSWORD = "admin123"
-SECRET_TOKEN = "my-secret-token"
+# Secrets should be provided via environment variables and not stored in code.
+# Defaults are empty strings to keep the module importable in CI/test environments.
+PASSWORD = os.getenv("PASSWORD", "")
+SECRET_TOKEN = os.getenv("SECRET_TOKEN", "")
+
+
+def _penalty_for(user_type, is_campaign, coupon_code):
+    """Return numeric penalty to subtract from the base price.
+
+    Behavior mirrors the original nested logic in calc_price.
+    """
+    if user_type == "normal":
+        if coupon_code is None:
+            return 0
+        return {"AAA": 100, "BBB": 200, "CCC": 300}.get(coupon_code, 0)
+
+    if user_type == "vip":
+        if is_campaign:
+            if coupon_code is None:
+                return 200
+            return {"AAA": 500, "BBB": 600}.get(coupon_code, 200)
+        return 100
+
+    return 0
 
 
 def calc_price(price, tax, discount, user_type, is_campaign, coupon_code):
     print("start calc_price")
-    result = 0
-    temp = 123
 
-    if user_type == "normal":
-        if is_campaign == True:
-            if coupon_code != None:
-                if coupon_code == "AAA":
-                    result = price + (price * tax) - discount - 100
-                elif coupon_code == "BBB":
-                    result = price + (price * tax) - discount - 200
-                elif coupon_code == "CCC":
-                    result = price + (price * tax) - discount - 300
-                else:
-                    result = price + (price * tax) - discount
-            else:
-                result = price + (price * tax) - discount
-        else:
-            if coupon_code != None:
-                if coupon_code == "AAA":
-                    result = price + (price * tax) - discount - 100
-                elif coupon_code == "BBB":
-                    result = price + (price * tax) - discount - 200
-                elif coupon_code == "CCC":
-                    result = price + (price * tax) - discount - 300
-                else:
-                    result = price + (price * tax) - discount
-            else:
-                result = price + (price * tax) - discount
-    elif user_type == "vip":
-        if is_campaign == True:
-            if coupon_code != None:
-                if coupon_code == "AAA":
-                    result = price + (price * tax) - discount - 500
-                elif coupon_code == "BBB":
-                    result = price + (price * tax) - discount - 600
-                else:
-                    result = price + (price * tax) - discount - 200
-            else:
-                result = price + (price * tax) - discount - 200
-        else:
-            result = price + (price * tax) - discount - 100
-    else:
-        result = price + (price * tax) - discount
+    # base price computed once
+    base = price + (price * tax) - discount
+
+    penalty = _penalty_for(user_type, is_campaign, coupon_code)
+    result = base - penalty
 
     if result < 0:
         result = 0
@@ -69,19 +54,23 @@ def save_user(name, age):
 
 def read_config():
     try:
-        f = open("config.txt", "r")
-        data = f.read()
-        return data
-    except:
+        # use context manager to ensure file is closed; catch specific I/O errors
+        with open("config.txt", "r") as f:
+            data = f.read()
+            return data
+    except OSError:
+        # Return empty string when the config file is missing or cannot be read
         return ""
     finally:
+        # keep the original logging side effect
         print("config loaded")
 
 
 def divide(a, b):
     try:
         return a / b
-    except Exception:
+    except (ZeroDivisionError, TypeError):
+        # Return None for division-by-zero and for invalid (non-numeric) inputs
         return None
 
 
